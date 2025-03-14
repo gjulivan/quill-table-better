@@ -166,7 +166,7 @@ $focused-border: 1px solid $focused-border-color;
   padding: 4px;
   box-sizing: border-box;
   z-index: 1;
-  @extend .ql-table-border-shadow;  
+  @extend .ql-table-border-shadow;
 }
 .ql-table-triangle-up {
   @include triangle('bottom', 'top', $border-color-simple, $color-white);
@@ -179,15 +179,16 @@ $focused-border: 1px solid $focused-border-color;
   &-input-wrapper {
     position: relative;
     height: 100%;
-    & > label {
-      position: absolute;
-      left: 0;
-      top: -50%;
-      transform: translateY(50%) scale(0.75);
-      color: #999;
-      background: $color-white;
-      display: none;
-    }
+  }
+  &-input-wrapper > label,
+  label {
+    background: $color-white;
+    color: #999;
+    display: none;
+    position: absolute;
+    left: 0;
+    top: -8px;
+    transform: scale(0.75);
   }
   &-status {
     @extend .ql-table-tooltip-error;
@@ -279,11 +280,12 @@ $focused-border: 1px solid $focused-border-color;
   }
 }
 .ql-table-properties-form {
-  width: 320px;
-  position: absolute;
-  left: 50%;
-  padding-bottom: 8px;
   background: $color-white;
+  padding-bottom: 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
   z-index: 1;
   @include boxShadow($color-ccced1);
   .properties-form-header {
@@ -371,10 +373,25 @@ $focused-border: 1px solid $focused-border-color;
   display: flex;
   .label-field-view-color {
     flex: 1;
-    .property-input {
-      @extend .ql-table-input;
-      border: 1px solid transparent;
-      height: 100%;
+    .clr-field {
+      width: 100%;
+      &, & .property-input {
+        height: 100%;
+      }
+      .property-input {
+        @extend .ql-table-input;
+        border: 1px solid transparent;
+        color: fieldtext;
+        min-width: 110px;
+      }
+      button {
+        height: 24px;
+        width: 24px;
+        right: 3px;
+      }
+    }
+    label {
+      display: block;
     }
   }
   .color-picker {
@@ -468,10 +485,6 @@ $focused-border: 1px solid $focused-border-color;
         height: 100%;
         display: flex;
         flex-direction: column;
-        .iro-container {
-          flex: 1;
-          @extend .ql-table-center;
-        }
       }
     }
   }

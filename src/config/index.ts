@@ -1,16 +1,16 @@
-import type { Props, UseLanguageHandler } from '../types';
 import alignBottomIcon from '../assets/icon/align-bottom.svg';
 import alignCenterIcon from '../assets/icon/align-center.svg';
+import alignJustifyIcon from '../assets/icon/align-justify.svg';
 import alignLeftIcon from '../assets/icon/align-left.svg';
 import alignMiddleIcon from '../assets/icon/align-middle.svg';
-import alignJustifyIcon from '../assets/icon/align-justify.svg';
 import alignRightIcon from '../assets/icon/align-right.svg';
 import alignTopIcon from '../assets/icon/align-top.svg';
+import type { Props, UseLanguageHandler } from '../types';
 import { convertUnitToInteger, isValidColor, isValidDimensions } from '../utils';
 
 interface Options {
-  type: string
-  attribute: Props
+  type: string;
+  attribute: Props;
 }
 
 const CELL_ATTRIBUTE = ['data-row', 'width', 'height', 'colspan', 'rowspan', 'style'];
@@ -218,7 +218,7 @@ function getCellProperties(attribute: Props, useLanguage: UseLanguageHandler) {
             category: 'dropdown',
             propertyName: 'border-style',
             value: attribute['border-style'],
-            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid'],
+            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid']
           },
           {
             category: 'color',
@@ -319,7 +319,7 @@ function getCellProperties(attribute: Props, useLanguage: UseLanguageHandler) {
             menus: [
               { icon: alignTopIcon, describe: useLanguage('alCellTxtT'), align: 'top' },
               { icon: alignMiddleIcon, describe: useLanguage('alCellTxtM'), align: 'middle' },
-              { icon: alignBottomIcon, describe: useLanguage('alCellTxtB'), align: 'bottom' },
+              { icon: alignBottomIcon, describe: useLanguage('alCellTxtB'), align: 'bottom' }
             ]
           }
         ]
@@ -339,7 +339,7 @@ function getTableProperties(attribute: Props, useLanguage: UseLanguageHandler) {
             category: 'dropdown',
             propertyName: 'border-style',
             value: attribute['border-style'],
-            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid'],
+            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid']
           },
           {
             category: 'color',
@@ -434,6 +434,6 @@ export {
   CELL_PROPERTIES,
   COLORS,
   DEVIATION,
-  TABLE_PROPERTIES,
-  getProperties
+  getProperties,
+  TABLE_PROPERTIES
 };

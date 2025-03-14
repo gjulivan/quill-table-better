@@ -1,12 +1,13 @@
 import Quill from 'quill';
+import Module from "quill/core/module";
+import QuillClipboard from "quill/modules/clipboard";
 import Delta from 'quill-delta';
 import logger from 'quill/core/logger.js';
 import type { Range } from 'quill';
 import type { Props } from '../types';
 import { TableCellBlock, TableTemporary } from '../formats/table';
 
-const Module = Quill.import('core/module');
-const Clipboard = Quill.import('modules/clipboard') as typeof Module;
+const Clipboard = QuillClipboard as typeof Module;
 const debug = logger('quill:clipboard');
 
 class TableClipboard extends Clipboard {

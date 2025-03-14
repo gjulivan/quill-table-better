@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/attoae/quill-table-better.git"
+    "url": "git+https://github.com/uicontent/quill-table-better.git"
   },
   "keywords": [
     "quill",
@@ -48,7 +48,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
-    "@jaames/iro": "^5.5.2",
+    "@floating-ui/dom": "^1.6.13",
+    "@melloware/coloris": "^0.24.0",
     "@types/lodash.merge": "^4.6.7",
     "lodash.merge": "^4.6.2",
     "webpack-merge": "^5.8.0"

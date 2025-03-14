@@ -1,8 +1,8 @@
-import Delta from 'quill-delta';
 import merge from 'lodash.merge';
+import Delta from 'quill-delta';
+import { TableCell } from '../formats/table';
 import type { Props } from '../types';
 import { filterWordStyle } from './';
-import { TableCell } from '../formats/table';
 
 const TABLE_ATTRIBUTE = ['border', 'cellspacing', 'style', 'class'];
 
@@ -16,10 +16,7 @@ function applyFormat(delta: Delta, format: Props | string, value?: any): Delta {
     if (op.attributes && op.attributes[format]) {
       return newDelta.push(op);
     }
-    return newDelta.insert(
-      op.insert,
-      merge({}, { [format]: value }, op.attributes)
-    );
+    return newDelta.insert(op.insert, merge({}, { [format]: value }, op.attributes));
   }, new Delta());
 }
 
@@ -43,11 +40,10 @@ function matchTableCell(node: HTMLTableCellElement, delta: Delta) {
   const tagName = node.tagName;
   const cells = Array.from(node.parentNode.querySelectorAll(tagName));
   const row =
-    node.getAttribute('data-row') ||
-    rows.indexOf((node.parentNode as HTMLTableRowElement)) + 1;
+    node.getAttribute('data-row') || rows.indexOf(node.parentNode as HTMLTableRowElement) + 1;
   const cellId = node?.firstElementChild?.getAttribute('data-cell') || cells.indexOf(node) + 1;
   if (!delta.length()) delta.insert('\n', { 'table-cell': { 'data-row': row } });
-  delta.ops.forEach(op => {
+  delta.ops.forEach((op) => {
     if (op.attributes && op.attributes['table-cell']) {
       // @ts-ignore
       op.attributes['table-cell'] = { ...op.attributes['table-cell'], 'data-row': row };
@@ -78,19 +74,14 @@ function matchTableTemporary(node: HTMLElement, delta: Delta) {
     }
     return formats;
   }, {});
-  return new Delta()
-    .insert('\n', { 'table-temporary': formats })
-    .concat(delta);
+  return new Delta().insert('\n', { 'table-temporary': formats }).concat(delta);
 }
 
 function matchTableTh(node: HTMLTableCellElement, delta: Delta, row: string | number) {
   const formats = TableCell.formats(node);
   if (node.tagName === 'TH') {
-    delta.ops.forEach(op => {
-      if (
-        typeof op.insert === 'string' &&
-        !op.insert.endsWith('\n')
-      ) {
+    delta.ops.forEach((op) => {
+      if (typeof op.insert === 'string' && !op.insert.endsWith('\n')) {
         op.insert += '\n';
       }
     });
@@ -99,10 +90,4 @@ function matchTableTh(node: HTMLTableCellElement, delta: Delta, row: string | nu
   return delta;
 }
 
-export {
-  applyFormat,
-  matchTable,
-  matchTableCell,
-  matchTableCol,
-  matchTableTemporary
-}
+export { applyFormat, matchTable, matchTableCell, matchTableCol, matchTableTemporary };

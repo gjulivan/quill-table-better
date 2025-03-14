@@ -1,11 +1,12 @@
-import Quill from 'quill';
 import type { BlockBlot } from 'parchment';
+import Quill from 'quill';
+import QuillHeader from 'quill/formats/header';
 import type { Props, TableCellChildren } from '../types';
-import { TableCellBlock, TableCell } from './table';
-import { ListContainer } from './list';
 import { getCellFormats, getCorrectCellBlot } from '../utils';
+import { ListContainer } from './list';
+import { TableCell, TableCellBlock } from './table';
 
-const Header = Quill.import('formats/header') as typeof BlockBlot;
+const Header = QuillHeader as typeof BlockBlot;
 
 class TableHeader extends Header {
   static blotName = 'table-header';
@@ -21,7 +22,7 @@ class TableHeader extends Header {
     return node;
   }
 
-  format(name: string, value: string, isReplace?:boolean) {
+  format(name: string, value: string, isReplace?: boolean) {
     if (name === 'header') {
       const _value = this.statics.formats(this.domNode).value;
       const cellId = this.domNode.getAttribute('data-cell');
@@ -69,8 +70,11 @@ class TableHeader extends Header {
   }
 }
 
-Quill.register({
-  'formats/table-header': TableHeader
-}, true);
+Quill.register(
+  {
+    'formats/table-header': TableHeader
+  },
+  true
+);
 
 export default TableHeader;

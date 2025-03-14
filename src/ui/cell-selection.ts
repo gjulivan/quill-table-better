@@ -1,7 +1,9 @@
+import { BlockBlot, ContainerBlot, EmbedBlot } from 'parchment';
 import Quill from 'quill';
 import Delta from 'quill-delta';
-import { BlockBlot, ContainerBlot, EmbedBlot } from 'parchment';
 import type { AttributeMap, Op } from 'quill-delta';
+import { DEVIATION } from '../config';
+import { TableCellBlock, TableCell } from '../formats/table';
 import type {
   Props,
   QuillTableBetter,
@@ -19,8 +21,6 @@ import {
   getCorrectCellBlot
 } from '../utils';
 import { applyFormat } from '../utils/clipboard-matchers';
-import { TableCellBlock, TableCell } from '../formats/table';
-import { DEVIATION } from '../config';
 
 const WHITE_LIST = [
   'bold',

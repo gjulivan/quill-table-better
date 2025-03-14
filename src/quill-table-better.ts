@@ -1,54 +1,55 @@
+import type { EmitterSource, Range } from 'quill';
 import Quill from 'quill';
 import Delta from 'quill-delta';
-import type { EmitterSource, Range } from 'quill';
-import type { Props } from './types';
-import type { BindingObject, Context } from './types/keyboard';
-import {
-  cellId,
-  TableCellBlock,
-  TableCell,
-  TableRow,
-  TableBody,
-  TableTemporary,
-  TableContainer,
-  tableId,
-  TableCol,
-  TableColgroup
-} from './formats/table';
+import Module from 'quill/core/module';
+import { CELL_DEFAULT_WIDTH } from './config';
 import TableHeader from './formats/header';
 import { ListContainer } from './formats/list';
-import { 
+import {
+  cellId,
+  TableBody,
+  TableCell,
+  TableCellBlock,
+  TableCol,
+  TableColgroup,
+  TableContainer,
+  tableId,
+  TableRow,
+  TableTemporary
+} from './formats/table';
+import Language from './language';
+import TableClipboard from './modules/clipboard';
+import TableToolbar from './modules/toolbar';
+import type { Props } from './types';
+import type { BindingObject, Context } from './types/keyboard';
+import CellSelection from './ui/cell-selection';
+import OperateLine from './ui/operate-line';
+import TableMenus from './ui/table-menus';
+import ToolbarTable, { TableSelect } from './ui/toolbar-table';
+import { getCellId, getCorrectCellBlot } from './utils';
+import {
   matchTable,
   matchTableCell,
   matchTableCol,
   matchTableTemporary
 } from './utils/clipboard-matchers';
-import Language from './language';
-import CellSelection from './ui/cell-selection';
-import OperateLine from './ui/operate-line';
-import TableMenus from './ui/table-menus';
-import { CELL_DEFAULT_WIDTH } from './config';
-import ToolbarTable, { TableSelect } from './ui/toolbar-table';
-import { getCellId, getCorrectCellBlot } from './utils';
-import TableToolbar from './modules/toolbar';
-import TableClipboard from './modules/clipboard';
 
 interface Options {
-  language?: string | {
-    name: string
-    content: Props
-  }
-  menus?: string[]
+  language?:
+    | string
+    | {
+        name: string;
+        content: Props;
+      };
+  menus?: string[];
   toolbarButtons?: {
-    whiteList?: string[]
-    singleWhiteList?: string[]
-  }
-  toolbarTable?: boolean
+    whiteList?: string[];
+    singleWhiteList?: string[];
+  };
+  toolbarTable?: boolean;
 }
 
 type Line = TableCellBlock | TableHeader | ListContainer;
-
-const Module = Quill.import('core/module');
 
 class Table extends Module {
   language: Language;
@@ -57,9 +58,9 @@ class Table extends Module {
   tableMenus: TableMenus;
   tableSelect: TableSelect;
   options: Options;
-  
+
   static keyboardBindings: { [propName: string]: BindingObject };
-  
+
   static register() {
     Quill.register(TableCellBlock, true);
     Quill.register(TableCell, true);
@@ -69,10 +70,13 @@ class Table extends Module {
     Quill.register(TableContainer, true);
     Quill.register(TableCol, true);
     Quill.register(TableColgroup, true);
-    Quill.register({
-      'modules/toolbar': TableToolbar,
-      'modules/clipboard': TableClipboard
-    }, true);
+    Quill.register(
+      {
+        'modules/toolbar': TableToolbar,
+        'modules/clipboard': TableClipboard
+      },
+      true
+    );
   }
 
   constructor(quill: Quill, options: Options) {
@@ -172,7 +176,7 @@ class Table extends Module {
     const range = this.quill.getSelection(true);
     if (range == null) return;
     if (this.isTable(range)) return;
-    const style = `width: ${CELL_DEFAULT_WIDTH * columns}px`
+    const style = `width: ${CELL_DEFAULT_WIDTH * columns}px`;
     const formats = this.quill.getFormat(range.index - 1);
     const [, offset] = this.quill.getLine(range.index);
     const isExtra = !!formats[TableCellBlock.blotName] || offset !== 0;
@@ -183,7 +187,7 @@ class Table extends Module {
       .delete(range.length)
       .concat(extraDelta)
       .insert('\n', { [TableTemporary.blotName]: { style } });
-    const delta = new Array(rows).fill(0).reduce(memo => {
+    const delta = new Array(rows).fill(0).reduce((memo) => {
       const id = tableId();
       return new Array(columns).fill('\n').reduce((memo, text) => {
         return memo.insert(text, {
@@ -234,10 +238,7 @@ class Table extends Module {
 
   private updateMenus(e: KeyboardEvent) {
     if (!this.cellSelection.selectedTds.length) return;
-    if (
-      e.key === 'Enter' ||
-      (e.ctrlKey && e.key === 'v')
-    ) {
+    if (e.key === 'Enter' || (e.ctrlKey && e.key === 'v')) {
       this.tableMenus.updateMenus();
     }
   }
@@ -265,7 +266,7 @@ const keyboardBindings = {
       this.quill.updateContents(delta, Quill.sources.USER);
       this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       this.quill.scrollSelectionIntoView();
-    },
+    }
   },
   'table-list backspace': makeTableListHandler('Backspace'),
   'table-list delete': makeTableListHandler('Delete'),
@@ -274,7 +275,7 @@ const keyboardBindings = {
     collapsed: true,
     format: ['table-list'],
     empty: true,
-    handler(range: Range, context: Context) {
+    handler(_range: Range, context: Context) {
       const { line } = context;
       const { cellId } = line.parent.formats()[line.parent.statics.blotName];
       const blot = line.replaceWith(TableCellBlock.blotName, cellId) as TableCellBlock;
@@ -283,7 +284,7 @@ const keyboardBindings = {
       cell && tableModule.cellSelection.setSelected(cell.domNode, false);
     }
   }
-}
+};
 
 function makeCellBlockHandler(key: string) {
   return {
@@ -297,11 +298,9 @@ function makeCellBlockHandler(key: string) {
       const blotName = line.prev?.statics.blotName;
       if (
         offset === 0 &&
-        (
-          blotName === ListContainer.blotName ||
+        (blotName === ListContainer.blotName ||
           blotName === TableCellBlock.blotName ||
-          blotName === TableHeader.blotName
-        )
+          blotName === TableHeader.blotName)
       ) {
         return removeLine.call(this, line, range);
       }
@@ -311,7 +310,7 @@ function makeCellBlockHandler(key: string) {
       }
       return true;
     }
-  }
+  };
 }
 
 // Prevent table default up and down keyboard events.
@@ -333,7 +332,7 @@ function makeTableHeaderHandler(key: string) {
     format: ['table-header'],
     collapsed: true,
     empty: true,
-    handler(range: Range, context: Context) {
+    handler(range: Range, _context: Context) {
       const [line] = this.quill.getLine(range.index);
       if (line.prev) {
         return removeLine.call(this, line, range);
@@ -342,7 +341,7 @@ function makeTableHeaderHandler(key: string) {
         line.replaceWith(TableCellBlock.blotName, cellId);
       }
     }
-  }
+  };
 }
 
 function makeTableListHandler(key: string) {
@@ -351,12 +350,12 @@ function makeTableListHandler(key: string) {
     format: ['table-list'],
     collapsed: true,
     empty: true,
-    handler(range: Range, context: Context) {
+    handler(range: Range, _context: Context) {
       const [line] = this.quill.getLine(range.index);
       const cellId = getCellId(line.parent.formats()[line.parent.statics.blotName]);
-      line.replaceWith(TableCellBlock.blotName, cellId);      
+      line.replaceWith(TableCellBlock.blotName, cellId);
     }
-  }
+  };
 }
 
 function removeLine(line: Line, range: Range) {

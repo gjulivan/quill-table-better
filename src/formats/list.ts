@@ -1,12 +1,14 @@
-import Quill from 'quill';
 import type { BlockBlot, ContainerBlot } from 'parchment';
-import type { Props, TableCellChildren } from '../types';
-import { TableCell, TableCellBlock } from './table';
-import { getCellFormats, getCorrectCellBlot } from '../utils';
+import Quill from 'quill';
+import QuillList from 'quill/formats/list';
+import QuillContainer from 'quill/blots/container';
 import { CELL_ATTRIBUTE } from '../config';
+import type { Props, TableCellChildren } from '../types';
+import { getCellFormats, getCorrectCellBlot } from '../utils';
+import { TableCell, TableCellBlock } from './table';
 
-const List = Quill.import('formats/list') as typeof BlockBlot;
-const Container = Quill.import('blots/container') as typeof ContainerBlot;
+const List = QuillList as typeof BlockBlot;
+const Container = QuillContainer as typeof ContainerBlot;
 const DEFAULT_ATTRIBUTE = ['colspan', 'rowspan'];
 
 class ListContainer extends Container {
@@ -30,7 +32,7 @@ class ListContainer extends Container {
     }
     return node;
   }
-  
+
   format(name: string, value: string | Props) {
     return this.wrap(name, value);
   }
@@ -61,7 +63,7 @@ ListContainer.tagName = 'OL';
 
 class TableList extends List {
   parent: ListContainer;
-  
+
   format(name: string, value: string | Props, isReplace?: boolean) {
     const list = this.formats()[this.statics.blotName];
     if (name === 'list') {
@@ -145,9 +147,12 @@ class TableList extends List {
 TableList.blotName = 'table-list';
 TableList.className = 'table-list';
 
-Quill.register({
-  'formats/table-list': TableList
-}, true);
+Quill.register(
+  {
+    'formats/table-list': TableList
+  },
+  true
+);
 
 ListContainer.allowedChildren = [TableList];
 TableList.requiredContainer = ListContainer;

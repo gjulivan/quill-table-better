@@ -1,15 +1,11 @@
-import Quill from 'quill';
 import type { InlineBlot } from 'parchment';
+import QuillInline from 'quill/blots/inline';
 import type { InsertTableHandler } from '../types';
-import tableIcon from '../assets/icon/table.svg';
 
-const Inline = Quill.import('blots/inline') as typeof InlineBlot;
-const icons = Quill.import('ui/icons');
-// @ts-expect-error
-icons['table-better'] = tableIcon;
+const Inline = QuillInline as typeof InlineBlot;
 const SUM = 10;
- 
-class ToolbarTable extends Inline {};
+
+class ToolbarTable extends Inline {}
 
 class TableSelect {
   computeChildren: Element[];
@@ -40,14 +36,14 @@ class TableSelect {
         fragment.appendChild(child);
       }
     }
-    label.innerHTML = '0 x 0';
+    label.innerHTML = '0 × 0';
     container.classList.add('ql-table-select-container', 'ql-hidden');
     list.classList.add('ql-table-select-list');
     label.classList.add('ql-table-select-label');
     list.appendChild(fragment);
     container.appendChild(list);
     container.appendChild(label);
-    container.addEventListener('mousemove', e => this.handleMouseMove(e, container));
+    container.addEventListener('mousemove', (e) => this.handleMouseMove(e, container));
     return container;
   }
 
@@ -105,10 +101,10 @@ class TableSelect {
 
   setLabelContent(label: Element, child: Element) {
     if (!child) {
-      label.innerHTML = '0 x 0';
+      label.innerHTML = '0 × 0';
     } else {
       const [row, column] = this.getSelectAttrs(child);
-      label.innerHTML = `${row} x ${column}`;
+      label.innerHTML = `${row} × ${column}`;
     }
   }
 
@@ -123,4 +119,4 @@ class TableSelect {
   }
 }
 
-export { TableSelect, ToolbarTable as default };
+export { ToolbarTable as default, TableSelect };

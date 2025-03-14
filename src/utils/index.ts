@@ -1,18 +1,9 @@
 import Quill from 'quill';
-import type {
-  CorrectBound,
-  Props,
-  TableCellChildren,
-  TableContainer
-} from '../types';
-import {
-  TableCell,
-  TableCellBlock,
-  TableCol
-} from '../formats/table';
-import TableList, { ListContainer } from '../formats/list';
-import TableHeader from '../formats/header';
 import { COLORS, DEVIATION } from '../config';
+import TableHeader from '../formats/header';
+import TableList, { ListContainer } from '../formats/list';
+import { TableCell, TableCellBlock, TableCol } from '../formats/table';
+import type { CorrectBound, Props, TableCellChildren, TableContainer } from '../types';
 
 function addDimensionsUnit(value: string) {
   if (!value) return value;
@@ -43,11 +34,11 @@ function debounce(cb: Function, delay: number) {
   return function () {
     let context = this;
     let args = arguments;
-    if(timer) clearTimeout(timer);
+    if (timer) clearTimeout(timer);
     timer = setTimeout(function () {
       cb.apply(context, args);
     }, delay);
-  }
+  };
 }
 
 function filterWordStyle(s: string) {
@@ -119,14 +110,10 @@ function getComputeBounds(startCorrectBounds: CorrectBound, endCorrectBounds: Co
   const right = Math.max(startCorrectBounds.right, endCorrectBounds.right);
   const top = Math.min(startCorrectBounds.top, endCorrectBounds.top);
   const bottom = Math.max(startCorrectBounds.bottom, endCorrectBounds.bottom);
-  return { left, right, top, bottom }
+  return { left, right, top, bottom };
 }
 
-function getComputeSelectedCols(
-  computeBounds: CorrectBound,
-  table: Element,
-  container: Element
-) {
+function getComputeSelectedCols(computeBounds: CorrectBound, table: Element, container: Element) {
   const tableParchment = Quill.find(table) as TableContainer;
   const cols = tableParchment.descendants(TableCol);
   let correctLeft = 0;
@@ -192,14 +179,14 @@ function getComputeSelectedTds(
 
 function getCopyTd(html: string) {
   return html
-  .replace(/data-[a-z]+="[^"]*"/g, '')
-  .replace(/class="[^"]*"/g, collapse => {
-    return collapse
-      .replace('ql-cell-selected', '')
-      .replace('ql-cell-focused', '')
-      .replace('ql-table-block', '');
-  })
-  .replace(/class="\s*"/g, '');
+    .replace(/data-[a-z]+="[^"]*"/g, '')
+    .replace(/class="[^"]*"/g, (collapse) => {
+      return collapse
+        .replace('ql-cell-selected', '')
+        .replace('ql-cell-focused', '')
+        .replace('ql-table-block', '');
+    })
+    .replace(/class="\s*"/g, '');
 }
 
 function getCorrectBounds(target: Element, container: Element) {
@@ -216,7 +203,7 @@ function getCorrectBounds(target: Element, container: Element) {
     height,
     right: left + width,
     bottom: top + height
-  }
+  };
 }
 
 function getCorrectCellBlot(blot: TableCell | TableCellChildren): TableCell | null {
@@ -235,10 +222,7 @@ function getElementStyle(node: HTMLElement, rules: string[]) {
   const computedStyle = getComputedStyle(node);
   const style = node.style;
   return rules.reduce((styles: Props, rule: string) => {
-    styles[rule] = rgbToHex(
-      style.getPropertyValue(rule) ||
-      computedStyle.getPropertyValue(rule)
-    );
+    styles[rule] = rgbToHex(style.getPropertyValue(rule) || computedStyle.getPropertyValue(rule));
     return styles;
   }, {});
 }
@@ -289,7 +273,7 @@ function rgbToHex(value: string) {
   value = value.replace(/^[^\d]+/, '').replace(/[^\d]+$/, '');
   const hex = value
     .split(',')
-    .map(component => `00${parseInt(component, 10).toString(16)}`.slice(-2))
+    .map((component) => `00${parseInt(component, 10).toString(16)}`.slice(-2))
     .join('');
   return `#${hex}`;
 }
@@ -299,7 +283,10 @@ function rgbaToHex(value: string) {
   const r = Math.round(+value[0]);
   const g = Math.round(+value[1]);
   const b = Math.round(+value[2]);
-  const a = Math.round(+value[3] * 255).toString(16).toUpperCase().padStart(2, '0');
+  const a = Math.round(+value[3] * 255)
+    .toString(16)
+    .toUpperCase()
+    .padStart(2, '0');
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1) + a;
 }
 
@@ -321,7 +308,7 @@ function setElementProperty(node: HTMLElement, properties: Props) {
 }
 
 function throttle(cb: Function, delay: number) {
-  let last = 0
+  let last = 0;
   return function () {
     let context = this;
     let args = arguments;
@@ -330,12 +317,13 @@ function throttle(cb: Function, delay: number) {
       last = now;
       cb.apply(context, args);
     }
-  }
+  };
 }
 
 function throttleStrong(cb: Function, delay: number) {
-  let last = 0, timer: NodeJS.Timeout = null;
-  return function () { 
+  let last = 0,
+    timer: NodeJS.Timeout = null;
+  return function () {
     let context = this;
     let args = arguments;
     let now = +new Date();
@@ -349,14 +337,10 @@ function throttleStrong(cb: Function, delay: number) {
       last = now;
       cb.apply(context, args);
     }
-  }
+  };
 }
 
-function updateTableWidth(
-  table: HTMLElement,
-  tableBounds: CorrectBound,
-  change: number
-) {
+function updateTableWidth(table: HTMLElement, tableBounds: CorrectBound, change: number) {
   const tableBlot = Quill.find(table) as TableContainer;
   if (!tableBlot) return;
   const colgroup = tableBlot.colgroup();
@@ -400,8 +384,8 @@ export {
   isValidColor,
   isValidDimensions,
   removeElementProperty,
-  rgbToHex,
   rgbaToHex,
+  rgbToHex,
   setElementAttribute,
   setElementProperty,
   throttle,
