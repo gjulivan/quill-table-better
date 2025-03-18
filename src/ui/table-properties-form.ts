@@ -230,8 +230,8 @@ class TablePropertiesForm {
   }
 
   createInput(child: Child) {
-    const { attribute, message, propertyName, value, valid } = child;
-    const { placeholder = '' } = attribute;
+    const { attribute, message, propertyName, valid, value } = child;
+    const placeholder = attribute?.placeholder ?? '';
     const container = document.createElement('div');
     const wrapper = document.createElement('div');
     const label = document.createElement('label');
@@ -244,10 +244,9 @@ class TablePropertiesForm {
     input.classList.add('property-input');
     input.value = value;
     input.addEventListener('input', (e) => {
-      // debounce
       const value = (e.target as HTMLInputElement).value;
       valid && this.switchHidden(status, valid(value));
-      this.updateInputStatus(wrapper, valid && !valid(value));
+      this.updateInputStatus(wrapper, !valid?.(value));
       this.setAttribute(propertyName, value, container);
     });
     status.classList.add('label-field-view-status', 'ql-hidden');
@@ -441,7 +440,7 @@ class TablePropertiesForm {
     }
     for (const td of selectedTds) {
       const tdBlot = Quill.find(td) as TableCell;
-      const blotName = tdBlot.statics.blotName;
+      const blotName: string = tdBlot.statics.blotName;
       const formats = tdBlot.formats()[blotName];
       const style = this.getCellStyle(td, attrs);
       if (align) {
@@ -488,8 +487,8 @@ class TablePropertiesForm {
 
   setAttribute(propertyName: string, value: string, container?: HTMLElement) {
     this.attrs[propertyName] = value;
-    if (propertyName.includes('-color')) {
-      this.updateSelectColor(this.getColorClosest(container), value);
+    if (propertyName.includes('-color') && container) {
+      this.updateSelectColor(this.getColorClosest(container)!, value);
     }
   }
 

@@ -292,11 +292,9 @@ class TableMenus {
     leftIcon.setAttribute('src', left);
     dropDown.appendChild(leftIcon);
     if (isDropDown) {
-      const rightIcon = document.createElement("img");
-      rightIcon.setAttribute("src", right);
+      const rightIcon = document.createElement('img');
+      rightIcon.setAttribute('src', right);
       dropDown.appendChild(rightIcon);
-    } else {
-      dropDown.innerHTML = left;
     }
     container.classList.add('ql-table-dropdown');
     dropDown.classList.add('ql-table-tooltip-hover');

@@ -137,9 +137,10 @@ class TableCell extends Container {
     return formats;
   }
 
-  formats() {
-    const formats = this.statics.formats(this.domNode, this.scroll);
-    return { [this.statics.blotName]: formats };
+  formats(): { [key: string]: Props } {
+    const formats: Props = this.statics.formats(this.domNode, this.scroll);
+    const blotName: string = this.statics.blotName;
+    return { [blotName]: formats };
   }
 
   static getEmptyRowspan(domNode: Element) {
@@ -288,9 +289,10 @@ class TableTemporary extends Block {
     }, {});
   }
 
-  formats() {
-    const formats = this.statics.formats(this.domNode, this.scroll);
-    return { [this.statics.blotName]: formats };
+  formats(): { [key: string]: Props } {
+    const formats: Props = this.statics.formats(this.domNode, this.scroll);
+    const blotName: string = this.statics.blotName;
+    return { [blotName]: formats };
   }
 
   optimize(...args: unknown[]) {
@@ -783,8 +785,14 @@ function tableId() {
 }
 
 export {
-  cellId, TableBody, TableCell, TableCellBlock, TableCol,
-  TableColgroup, TableContainer,
-  tableId, TableRow, TableTemporary
+  cellId,
+  TableBody,
+  TableCell,
+  TableCellBlock,
+  TableCol,
+  TableColgroup,
+  TableContainer,
+  tableId,
+  TableRow,
+  TableTemporary
 };
-

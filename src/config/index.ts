@@ -20,9 +20,9 @@ const CELL_DEFAULT_VALUES: Props = {
   'border-color': '',
   'border-width': '',
   'background-color': '',
-  'width': '',
-  'height': '',
-  'padding': '',
+  width: '',
+  height: '',
+  padding: '',
   'text-align': 'left',
   'vertical-align': 'middle'
 };
@@ -218,7 +218,17 @@ function getCellProperties(attribute: Props, useLanguage: UseLanguageHandler) {
             category: 'dropdown',
             propertyName: 'border-style',
             value: attribute['border-style'],
-            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid']
+            options: [
+              'dashed',
+              'dotted',
+              'double',
+              'groove',
+              'inset',
+              'none',
+              'outset',
+              'ridge',
+              'solid'
+            ]
           },
           {
             category: 'color',
@@ -339,7 +349,17 @@ function getTableProperties(attribute: Props, useLanguage: UseLanguageHandler) {
             category: 'dropdown',
             propertyName: 'border-style',
             value: attribute['border-style'],
-            options: ['dashed', 'dotted', 'double', 'groove', 'inset', 'none', 'outset', 'ridge', 'solid']
+            options: [
+              'dashed',
+              'dotted',
+              'double',
+              'groove',
+              'inset',
+              'none',
+              'outset',
+              'ridge',
+              'solid'
+            ]
           },
           {
             category: 'color',
